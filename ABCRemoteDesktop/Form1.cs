@@ -7,7 +7,9 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -20,27 +22,63 @@ namespace ABCRemoteDesktop
       InitializeComponent();
     }
 
+    /*
+     * get profiles folders from app data and then use them
+     * 
+     */
+
     private void btnOpenUrl_Click(object sender, EventArgs e)
     {
       try
       {
+        Uri uriResult;
         if (string.IsNullOrWhiteSpace(txtUrl.Text))
           MessageBox.Show("Please fill all values", "Validation error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        else if(!(Uri.TryCreate(txtUrl.Text, UriKind.Absolute, out uriResult) && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps)))
+          MessageBox.Show("Url is not valid, Please verify", "Validation error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         else if (numMinProfile.Value > numMaxProfile.Value)
           MessageBox.Show("Minimum profile can't be greater than maximum profile", "Validation error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         else
         {
           string chromePath = GetChromePath();
+          string profilesFolder = @"Google\Chrome\User Data";
           if (string.IsNullOrWhiteSpace(chromePath))
             MessageBox.Show("couldn't find chrome");
-          for (int i = (int)numMinProfile.Value; i <= numMaxProfile.Value; i++)
+          else
           {
-            string profileName = "Profile " + i;
-            Process pro = new Process();
-            pro.StartInfo.FileName = chromePath;
-            pro.StartInfo.Arguments = "--profile-directory=\"" + profileName + "\" " + txtUrl.Text;
-            pro.Start();
+            string userProfile = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            string path = Path.Combine(userProfile, profilesFolder);
+            if (Directory.Exists(path))
+            {
+              var profiles = Directory.GetDirectories(path).Select(Path.GetFileName).Where(x => x.StartsWith("Profile")).ToArray();
+              foreach (string profile in profiles)
+              {
+                using (Process pro = new Process())
+                {
+                  pro.StartInfo.FileName = chromePath;
+                  pro.StartInfo.Arguments = "--profile-directory=\"" + profile + "\" " + txtUrl.Text;
+                  pro.Start();
+                }
+              }
+            }
           }
+
+
+          /*
+           * profiles using loop
+           */
+          //for (int i = (int)numMinProfile.Value; i <= numMaxProfile.Value; i++)
+          //{
+          //  string profileName = "Profile " + i;
+          //  Process pro = new Process();
+          //  pro.StartInfo.FileName = chromePath;
+          //  pro.StartInfo.Arguments = "--profile-directory=\"" + profileName + "\" " + txtUrl.Text;
+          //  pro.Start();
+          //}
+
+          /*
+           * profiles from desktop
+           */
           //string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
           //string[] filePaths = Directory.GetFiles(path, "*Chrome*.lnk", SearchOption.TopDirectoryOnly);
           //string url = "https://www.google.com";
@@ -94,10 +132,19 @@ namespace ABCRemoteDesktop
 
     private void brnCloseChrome_Click(object sender, EventArgs e)
     {
-      Process[] chromeInstances = Process.GetProcessesByName("chrome");
+      try
+      {
+        Process[] chromeInstances = Process.GetProcessesByName("chrome");
 
-      foreach (Process p in chromeInstances)
-        p.Kill();
+        foreach (Process p in chromeInstances)
+        {
+          p.Kill();
+        }
+      }
+      catch (Exception ex)
+      {
+        MessageBox.Show(ex.Message);
+      }
     }
 
     private void btnReset_Click(object sender, EventArgs e)
@@ -141,6 +188,20 @@ namespace ABCRemoteDesktop
       prefixes.Add(programFilesx86);
       var path = prefixes.Distinct().Select(prefix => Path.Combine(prefix, suffix)).FirstOrDefault(File.Exists);
       return path;
+    }
+    bool IsValidURL(string URL, out Uri resultURI)
+    {
+      if (!Regex.IsMatch(URL, @"^https?:\/\/", RegexOptions.IgnoreCase))
+        URL = "http://" + URL;
+
+      if (Uri.TryCreate(URL, UriKind.Absolute, out resultURI))
+        return (resultURI.Scheme == Uri.UriSchemeHttp ||
+                resultURI.Scheme == Uri.UriSchemeHttps);
+
+      return false;
+      //string Pattern = @"^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$";
+      //Regex Rgx = new Regex(Pattern, RegexOptions.Compiled | RegexOptions.IgnoreCase);
+      //return Rgx.IsMatch(URL);
     }
   }
 }

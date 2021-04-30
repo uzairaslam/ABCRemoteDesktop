@@ -102,6 +102,7 @@ namespace ABCRemoteDesktop
       this.label2.Size = new System.Drawing.Size(102, 16);
       this.label2.TabIndex = 5;
       this.label2.Text = "Minimum Profile";
+      this.label2.Visible = false;
       // 
       // label3
       // 
@@ -112,6 +113,7 @@ namespace ABCRemoteDesktop
       this.label3.Size = new System.Drawing.Size(106, 16);
       this.label3.TabIndex = 8;
       this.label3.Text = "Maximum Profile";
+      this.label3.Visible = false;
       // 
       // numMinProfile
       // 
@@ -130,6 +132,7 @@ namespace ABCRemoteDesktop
             0,
             0,
             0});
+      this.numMinProfile.Visible = false;
       this.numMinProfile.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.numMinProfile_KeyPress);
       // 
       // numMaxProfile
@@ -149,6 +152,7 @@ namespace ABCRemoteDesktop
             0,
             0,
             0});
+      this.numMaxProfile.Visible = false;
       this.numMaxProfile.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.numMinProfile_KeyPress);
       // 
       // Form1
