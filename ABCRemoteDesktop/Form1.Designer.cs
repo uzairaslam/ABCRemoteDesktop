@@ -38,6 +38,10 @@ namespace ABCRemoteDesktop
       this.label3 = new System.Windows.Forms.Label();
       this.numMinProfile = new System.Windows.Forms.NumericUpDown();
       this.numMaxProfile = new System.Windows.Forms.NumericUpDown();
+      this.label4 = new System.Windows.Forms.Label();
+      this.txtProfileStartWith = new System.Windows.Forms.TextBox();
+      this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+      this.btnProfileSelect = new System.Windows.Forms.Button();
       ((System.ComponentModel.ISupportInitialize)(this.numMinProfile)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.numMaxProfile)).BeginInit();
       this.SuspendLayout();
@@ -97,7 +101,7 @@ namespace ABCRemoteDesktop
       // 
       this.label2.AutoSize = true;
       this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-      this.label2.Location = new System.Drawing.Point(41, 77);
+      this.label2.Location = new System.Drawing.Point(655, 47);
       this.label2.Name = "label2";
       this.label2.Size = new System.Drawing.Size(102, 16);
       this.label2.TabIndex = 5;
@@ -108,7 +112,7 @@ namespace ABCRemoteDesktop
       // 
       this.label3.AutoSize = true;
       this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-      this.label3.Location = new System.Drawing.Point(245, 77);
+      this.label3.Location = new System.Drawing.Point(859, 47);
       this.label3.Name = "label3";
       this.label3.Size = new System.Drawing.Size(106, 16);
       this.label3.TabIndex = 8;
@@ -118,7 +122,7 @@ namespace ABCRemoteDesktop
       // numMinProfile
       // 
       this.numMinProfile.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-      this.numMinProfile.Location = new System.Drawing.Point(149, 75);
+      this.numMinProfile.Location = new System.Drawing.Point(763, 45);
       this.numMinProfile.Minimum = new decimal(new int[] {
             1,
             0,
@@ -138,7 +142,7 @@ namespace ABCRemoteDesktop
       // numMaxProfile
       // 
       this.numMaxProfile.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-      this.numMaxProfile.Location = new System.Drawing.Point(357, 75);
+      this.numMaxProfile.Location = new System.Drawing.Point(971, 45);
       this.numMaxProfile.Minimum = new decimal(new int[] {
             1,
             0,
@@ -155,11 +159,43 @@ namespace ABCRemoteDesktop
       this.numMaxProfile.Visible = false;
       this.numMaxProfile.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.numMinProfile_KeyPress);
       // 
+      // label4
+      // 
+      this.label4.AutoSize = true;
+      this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.label4.Location = new System.Drawing.Point(37, 72);
+      this.label4.Name = "label4";
+      this.label4.Size = new System.Drawing.Size(46, 16);
+      this.label4.TabIndex = 11;
+      this.label4.Text = "Profile";
+      // 
+      // txtProfileStartWith
+      // 
+      this.txtProfileStartWith.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.txtProfileStartWith.Location = new System.Drawing.Point(89, 69);
+      this.txtProfileStartWith.Name = "txtProfileStartWith";
+      this.txtProfileStartWith.Size = new System.Drawing.Size(321, 22);
+      this.txtProfileStartWith.TabIndex = 12;
+      // 
+      // btnProfileSelect
+      // 
+      this.btnProfileSelect.BackgroundImage = global::ABCRemoteDesktop.Properties.Resources.imgpsh_fullsize_anim;
+      this.btnProfileSelect.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+      this.btnProfileSelect.Location = new System.Drawing.Point(412, 63);
+      this.btnProfileSelect.Name = "btnProfileSelect";
+      this.btnProfileSelect.Size = new System.Drawing.Size(45, 34);
+      this.btnProfileSelect.TabIndex = 13;
+      this.btnProfileSelect.UseVisualStyleBackColor = true;
+      this.btnProfileSelect.Click += new System.EventHandler(this.btnProfileSelect_Click);
+      // 
       // Form1
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(514, 171);
+      this.ClientSize = new System.Drawing.Size(498, 171);
+      this.Controls.Add(this.btnProfileSelect);
+      this.Controls.Add(this.txtProfileStartWith);
+      this.Controls.Add(this.label4);
       this.Controls.Add(this.numMaxProfile);
       this.Controls.Add(this.numMinProfile);
       this.Controls.Add(this.label3);
@@ -191,6 +227,10 @@ namespace ABCRemoteDesktop
     private System.Windows.Forms.Label label3;
     private System.Windows.Forms.NumericUpDown numMinProfile;
     private System.Windows.Forms.NumericUpDown numMaxProfile;
+    private System.Windows.Forms.Label label4;
+    private System.Windows.Forms.TextBox txtProfileStartWith;
+    private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
+    private System.Windows.Forms.Button btnProfileSelect;
   }
 }
 

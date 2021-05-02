@@ -22,6 +22,8 @@ namespace ABCRemoteDesktop
       InitializeComponent();
     }
 
+    private string profilesFolder = @"Google\Chrome\User Data";
+
     /*
      * get profiles folders from app data and then use them
      * 
@@ -41,7 +43,6 @@ namespace ABCRemoteDesktop
         else
         {
           string chromePath = GetChromePath();
-          string profilesFolder = @"Google\Chrome\User Data";
           if (string.IsNullOrWhiteSpace(chromePath))
             MessageBox.Show("couldn't find chrome");
           else
@@ -50,16 +51,21 @@ namespace ABCRemoteDesktop
             string path = Path.Combine(userProfile, profilesFolder);
             if (Directory.Exists(path))
             {
-              var profiles = Directory.GetDirectories(path).Select(Path.GetFileName).Where(x => x.StartsWith("Profile")).ToArray();
-              foreach (string profile in profiles)
+              var profiles = Directory.GetDirectories(path).Select(Path.GetFileName).Where(x => x.StartsWith(string.IsNullOrWhiteSpace(txtProfileStartWith.Text) ? "Profile" : txtProfileStartWith.Text)).ToArray();
+              if (profiles.Length > 1)
               {
-                using (Process pro = new Process())
+                foreach (string profile in profiles)
                 {
-                  pro.StartInfo.FileName = chromePath;
-                  pro.StartInfo.Arguments = "--profile-directory=\"" + profile + "\" " + txtUrl.Text;
-                  pro.Start();
+                  using (Process pro = new Process())
+                  {
+                    pro.StartInfo.FileName = chromePath;
+                    pro.StartInfo.Arguments = "--profile-directory=\"" + profile + "\" " + txtUrl.Text;
+                    pro.Start();
+                  }
                 }
               }
+              else
+                MessageBox.Show("Profiles not found");
             }
           }
 
@@ -150,6 +156,7 @@ namespace ABCRemoteDesktop
     private void btnReset_Click(object sender, EventArgs e)
     {
       txtUrl.Text = string.Empty;
+      txtProfileStartWith.Text = string.Empty;
       numMinProfile.Value = 1;
       numMaxProfile.Value = 100;
     }
@@ -189,19 +196,21 @@ namespace ABCRemoteDesktop
       var path = prefixes.Distinct().Select(prefix => Path.Combine(prefix, suffix)).FirstOrDefault(File.Exists);
       return path;
     }
-    bool IsValidURL(string URL, out Uri resultURI)
+    private void btnProfileSelect_Click(object sender, EventArgs e)
     {
-      if (!Regex.IsMatch(URL, @"^https?:\/\/", RegexOptions.IgnoreCase))
-        URL = "http://" + URL;
-
-      if (Uri.TryCreate(URL, UriKind.Absolute, out resultURI))
-        return (resultURI.Scheme == Uri.UriSchemeHttp ||
-                resultURI.Scheme == Uri.UriSchemeHttps);
-
-      return false;
-      //string Pattern = @"^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$";
-      //Regex Rgx = new Regex(Pattern, RegexOptions.Compiled | RegexOptions.IgnoreCase);
-      //return Rgx.IsMatch(URL);
+      try
+      {
+        string userProfile = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+        string path = Path.Combine(userProfile, profilesFolder);
+        folderBrowserDialog1.SelectedPath = path;
+        folderBrowserDialog1.ShowDialog();
+        txtProfileStartWith.Text = Path.GetFileName(folderBrowserDialog1.SelectedPath);
+        txtProfileStartWith.Focus();
+      }
+      catch (Exception ex)
+      {
+        MessageBox.Show(ex.Message);
+      }
     }
   }
 }
