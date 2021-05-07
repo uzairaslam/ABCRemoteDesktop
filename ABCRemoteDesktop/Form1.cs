@@ -51,8 +51,10 @@ namespace ABCRemoteDesktop
             string path = Path.Combine(userProfile, profilesFolder);
             if (Directory.Exists(path))
             {
-              var profiles = Directory.GetDirectories(path).Select(Path.GetFileName).Where(x => x.StartsWith(string.IsNullOrWhiteSpace(txtProfileStartWith.Text) ? "Profile" : txtProfileStartWith.Text)).ToArray();
-              if (profiles.Length > 1)
+              var profiles = Directory.GetDirectories(path).Select(Path.GetFileName).Where(x => x.StartsWith(string.IsNullOrWhiteSpace(txtProfileStartWith.Text) ? "Profile" : txtProfileStartWith.Text));
+              var exceptStorePath = Directory.GetDirectories(path).Select(Path.GetFileName).Where(x => x.StartsWith(string.IsNullOrWhiteSpace(txtProfileStartWith.Text) ? "Profile" : txtProfileStartWith.Text) && x.Contains("store"));
+              profiles = profiles.Except(exceptStorePath);
+              if (profiles.Count() > 1)
               {
                 foreach (string profile in profiles)
                 {
